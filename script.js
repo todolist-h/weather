@@ -1,62 +1,58 @@
-// 1. 時計の更新
+const AREA_CODE = "440000"; // 大分県
+const WEATHER_URL = `https://www.jma.go.jp/bosai/forecast/data/forecast/${AREA_CODE}.json`;
+
 function updateClock() {
     const now = new Date();
-    const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+    document.getElementById('date').innerText = now.toLocaleDateString('en-US', options);
     
-    document.getElementById('date').innerText = 
-        `${now.getFullYear()}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} ${days[now.getDay()]}`;
-    
-    document.getElementById('clock').innerText = 
-        `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('clock').innerText = `${h}:${m}`;
 }
 
-// 2. 気象庁JSONから大分の天気を取得
-async function updateWeather() {
+async function fetchWeather() {
     try {
-        // 大分県の予報データ（440000）
-        const res = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/440000.json');
-        const data = await res.json();
-        
-        // 中部（大分市など）のデータ抽出
-        const areaData = data[0].timeSeries[0].areas.find(a => a.area.name === "中部");
-        const popData = data[0].timeSeries[1].areas.find(a => a.area.name === "中部");
-        
-        document.getElementById('weather-desc').innerText = areaData.weathers[0];
-        document.getElementById('pop').innerText = popData.pops[0];
-        
-        // 天気コードに応じた簡易アイコン設定
-        const code = areaData.weatherCodes[0];
-        let icon = "☀️";
-        if (code >= 200) icon = "☁️";
-        if (code >= 300) icon = "☔";
-        document.getElementById('weather-icon').innerText = icon;
+        const response = await fetch(WEATHER_URL);
+        const data = await response.json();
 
-        // 気温データ
-        const tempRes = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/440000.json');
-        // ※実際は第2インデックスなどに詳細気温がありますが、簡略化しています
-        document.getElementById('temp').innerText = `18°C`; 
+        // 大分地方（中部）の予報を抽出
+        const areaInfo = data[0].timeSeries[0].areas.find(a => a.area.name === "中部");
+        const popInfo = data[0].timeSeries[1].areas.find(a => a.area.name === "中部");
+        const tempInfo = data[0].timeSeries[2].areas.find(a => a.area.name === "大分");
 
-    } catch (e) {
-        console.error("Weather fetch error:", e);
+        // 表示の書き換え
+        document.getElementById('weather-desc').innerText = areaInfo.weathers[0].split('　')[0]; // 最初の単語のみ
+        document.getElementById('pop').innerText = popInfo.pops[0] + "%";
+        
+        // 気温の取得（データ構造により取得位置が変わるため調整）
+        const currentTemp = tempInfo.temps[0];
+        document.getElementById('current-temp').innerText = currentTemp;
+        document.getElementById('max-temp').innerText = (tempInfo.temps[1] || "--") + "°";
+        document.getElementById('min-temp').innerText = (tempInfo.temps[0] || "--") + "°";
+
+        // 簡易的な時間別予報の生成（デモ用）
+        updateHourly();
+
+    } catch (error) {
+        console.error("Weather Update Error:", error);
     }
 }
 
-// 3. NHK風 ニュース取得（サンプル表示）
-function updateNews() {
-    // 本来はRSSをパースしますが、CORS制限があるため
-    // 実際はVercel Functionsや GASなどで中継したJSONを叩くのが定石です。
-    const sampleNews = [
-        "上野丘高校：来週月曜日から冬服更衣準備期間です",
-        "大分県内：本日、乾燥注意報が発令されました",
-        "進路指導室より：共通テストまで残り○日"
-    ];
-    const list = document.getElementById('news-list');
-    list.innerHTML = sampleNews.map(n => `<li>${n}</li>`).join('');
+function updateHourly() {
+    const container = document.getElementById('hourly-container');
+    const hours = ["12", "15", "18", "21", "00"];
+    container.innerHTML = hours.map(h => `
+        <div class="hour-box">
+            <div>${h}</div>
+            <div class="h-temp">14°</div>
+            <div class="h-pop">10%</div>
+        </div>
+    `).join('');
 }
 
-// 初期化とタイマー設定
+// 初期実行
 setInterval(updateClock, 1000);
-setInterval(updateWeather, 600000); // 10分ごと
+setInterval(fetchWeather, 600000); // 10分おきに更新
 updateClock();
-updateWeather();
-updateNews();
+fetchWeather();
