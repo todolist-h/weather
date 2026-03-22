@@ -1,97 +1,30 @@
-:root {
-    --glass-bg: rgba(20, 20, 20, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.15);
-    --text-color: #ffffff;
-}
-
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: 'Inter', -apple-system, sans-serif;
-    color: var(--text-color);
-    background-color: #000;
-    overflow: hidden;
-}
-
-.bg-image {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: url('https://images.unsplash.com/photo-1516912481808-34061f8c03c7?q=80&w=1920') no-repeat center center;
-    background-size: cover;
-    filter: brightness(0.7);
-    z-index: -1;
-}
-
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    height: 100vh;
-    padding: 60px;
-    box-sizing: border-box;
-}
-
-/* 時計部分 */
-.date-display { font-size: 1.8rem; font-weight: 300; margin-bottom: -10px; }
-.clock-display { font-size: 10rem; font-weight: 200; letter-spacing: -4px; }
-
-/* 天気パネル */
-.weather-panel {
-    width: 420px;
-    padding: 30px;
-    border-radius: 30px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-}
-
-.panel-header {
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 0.2rem;
-    margin-bottom: 20px;
-    opacity: 0.8;
-}
-
-.current-weather {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.temp-main { font-size: 5.5rem; font-weight: 200; }
-.temp-main .unit { font-size: 3rem; vertical-align: super; }
-
-.condition { font-size: 1.8rem; font-weight: 400; }
-.location { font-size: 1rem; opacity: 0.6; margin-top: 4px; }
-
-.weather-stats {
-    display: flex;
-    justify-content: space-between;
-    border-top: 1px solid var(--glass-border);
-    padding-top: 20px;
-    margin-bottom: 20px;
-}
-
-.stat-item { display: flex; flex-direction: column; }
-.stat-label { font-size: 0.7rem; opacity: 0.5; margin-bottom: 5px; }
-.stat-value { font-size: 1.2rem; font-weight: 400; }
-
+/* 時間別予報のコンテナ */
 .hourly-forecast {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
 }
 
 .hour-box {
     text-align: center;
-    font-size: 0.9rem;
+    flex: 1;
 }
 
-.hour-box .h-temp { font-weight: 600; margin-top: 5px; }
-.hour-box .h-pop { font-size: 0.7rem; opacity: 0.5; }
+.h-time {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    margin-bottom: 8px;
+    font-weight: 300;
+}
+
+.h-icon {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.h-temp {
+    font-size: 1rem;
+    font-weight: 500;
+}
