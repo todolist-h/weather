@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uenogaoka Digital Signage</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <main class="container">
+        <section class="main-panel">
+            <div class="glass-card clock-card">
+                <div id="date" class="date-text">----/--/-- ---</div>
+                <div id="clock" class="clock-text">00:00</div>
+            </div>
+
+            <div class="glass-card weather-card">
+                <div class="card-label">WEATHER (OITA)</div>
+                <div class="weather-main">
+                    <div id="weather-icon" class="weather-icon">--</div>
+                    <div class="weather-info">
+                        <div id="temp" class="temp-text">--°C</div>
+                        <div id="weather-desc" class="desc-text">読み込み中...</div>
+                    </div>
+                </div>
+                <div class="weather-details">
+                    <div class="detail-item">降水確率 <span id="pop">--</span>%</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="side-panel">
+            <div class="glass-card news-card">
+                <div class="card-label">SCHOOL NEWS</div>
+                <ul id="news-list" class="news-list">
+                    <li>ニュースを取得しています...</li>
+                </ul>
+            </div>
+
+            <div class="glass-card eq-card" id="eq-panel">
+                <div class="card-label">EARTHQUAKE INFO</div>
+                <div id="eq-info">最新の地震情報はありません</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
