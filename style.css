@@ -1,72 +1,97 @@
 :root {
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --text-main: #ffffff;
+    --glass-bg: rgba(20, 20, 20, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --text-color: #ffffff;
 }
 
-* { margin: 0; padding: 0; box-box: border-box; }
-
-body {
-    font-family: 'Inter', sans-serif;
-    background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-    background-size: cover;
-    color: var(--text-main);
-    height: 100vh;
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text-color);
+    background-color: #000;
     overflow: hidden;
 }
 
-.background-overlay {
+.bg-image {
     position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 100%);
+    width: 100%;
+    height: 100%;
+    background: url('https://images.unsplash.com/photo-1516912481808-34061f8c03c7?q=80&w=1920') no-repeat center center;
+    background-size: cover;
+    filter: brightness(0.7);
     z-index: -1;
 }
 
 .container {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 30px;
-    padding: 40px;
-    height: calc(100vh - 80px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 100vh;
+    padding: 60px;
+    box-sizing: border-box;
 }
 
-.glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
+/* 時計部分 */
+.date-display { font-size: 1.8rem; font-weight: 300; margin-bottom: -10px; }
+.clock-display { font-size: 10rem; font-weight: 200; letter-spacing: -4px; }
+
+/* 天気パネル */
+.weather-panel {
+    width: 420px;
     padding: 30px;
-    margin-bottom: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    border-radius: 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
 }
 
-.card-label {
-    font-size: 0.8rem;
-    font-weight: 700;
+.panel-header {
+    text-transform: uppercase;
+    font-size: 0.9rem;
     letter-spacing: 0.2rem;
-    opacity: 0.7;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    opacity: 0.8;
 }
 
-/* Clock */
-.clock-text { font-size: 8rem; font-weight: 300; line-height: 1; }
-.date-text { font-size: 1.5rem; opacity: 0.9; margin-bottom: 5px; }
-
-/* Weather */
-.weather-main { display: flex; align-items: center; gap: 30px; margin-top: 10px; }
-.temp-text { font-size: 5rem; font-weight: 500; }
-.desc-text { font-size: 1.8rem; opacity: 0.9; }
-.weather-icon { font-size: 4rem; }
-
-/* News List */
-.news-list { list-style: none; }
-.news-list li {
-    padding: 15px 0;
-    border-bottom: 1px solid var(--glass-border);
-    font-size: 1.1rem;
-    line-height: 1.4;
+.current-weather {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-/* EQ Info - Danger Style */
-.eq-card.active { background: rgba(255, 0, 0, 0.2); border-color: rgba(255,0,0,0.4); }
+.temp-main { font-size: 5.5rem; font-weight: 200; }
+.temp-main .unit { font-size: 3rem; vertical-align: super; }
+
+.condition { font-size: 1.8rem; font-weight: 400; }
+.location { font-size: 1rem; opacity: 0.6; margin-top: 4px; }
+
+.weather-stats {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.stat-item { display: flex; flex-direction: column; }
+.stat-label { font-size: 0.7rem; opacity: 0.5; margin-bottom: 5px; }
+.stat-value { font-size: 1.2rem; font-weight: 400; }
+
+.hourly-forecast {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.hour-box {
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.hour-box .h-temp { font-weight: 600; margin-top: 5px; }
+.hour-box .h-pop { font-size: 0.7rem; opacity: 0.5; }
