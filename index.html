@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>熱中症警戒サイネージ</title>
+    <title>熱中症警戒サイネージ - 大分上野丘高校</title>
     <!-- Tailwind CSSの読み込み -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 視認性の高いGoogle Fonts (Noto Sans JP) の読み込み -->
@@ -27,7 +27,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            <h1 class="text-4xl font-bold tracking-widest">熱中症予防情報</h1>
+            <div>
+                <h1 class="text-4xl font-bold tracking-widest">熱中症予防情報</h1>
+                <p class="text-xl font-bold opacity-70">大分県立大分上野丘高等学校</p>
+            </div>
         </div>
         <div class="text-right">
             <div id="date-display" class="text-3xl font-bold tracking-wider">----年--月--日(-)</div>
@@ -81,15 +84,15 @@
     <!-- フッター -->
     <footer class="p-4 text-center bg-black/10 backdrop-blur-sm text-gray-800" id="footer-text">
         <p class="text-2xl font-bold tracking-wide">
-            ※気象API（Open-Meteo）の気温・湿度から算出した推定値です。目安としてご活用ください。
+            ※大分市の気象データから算出した推定値です。目安としてご活用ください。
         </p>
     </footer>
 
     <script>
         // 設定値
-        // デフォルトの取得地点（例：東京都立川市）
-        const LATITUDE = 35.6995;
-        const LONGITUDE = 139.4130;
+        // 大分県立大分上野丘高等学校の座標
+        const LATITUDE = 33.2269;
+        const LONGITUDE = 131.6119;
         const FETCH_INTERVAL_MS = 10 * 60 * 1000; // 10分ごとに気象データを更新
 
         // DOM要素の取得
@@ -126,8 +129,7 @@
         }
 
         /**
-         * 気温と湿度からWBGT（室内・日陰の目安）を推定計算する
-         * 簡易式: 0.735*Ta + 0.0374*RH + 0.00292*Ta*RH + 7.619
+         * 気温と湿度からWBGTを推定計算する
          * @param {number} temp 気温(℃)
          * @param {number} humid 湿度(%)
          * @returns {number} WBGT推定値
@@ -138,7 +140,6 @@
 
         /**
          * WBGT値に基づきUIを更新する
-         * @param {number} wbgt WBGT値
          */
         function updateAlertUI(wbgt) {
             let levelText = "";
@@ -146,9 +147,8 @@
             let bgColorClass = "";
             let boxColorClass = "";
             let msgColorClass = "";
-            let textColorClass = "text-gray-800"; // デフォルトの文字色
+            let textColorClass = "text-gray-800";
 
-            // レベル判定（日本スポーツ協会の指針基準を参考）
             if (wbgt >= 31.0) {
                 levelText = "危険";
                 msgText = "運動は原則中止！涼しい部屋へ避難";
@@ -188,16 +188,11 @@
                 elCardWbgt.className = "bg-green-50 backdrop-blur-md rounded-3xl p-8 shadow-xl flex flex-col items-center justify-center border-b-8 border-green-400";
             }
 
-            // UIへの適用
             elAlertText.textContent = levelText;
             elAlertMsg.textContent = msgText;
-            
-            // クラスの書き換え (リセットして再設定)
             elMainBg.className = `h-screen w-screen flex flex-col transition-colors duration-1000 ${bgColorClass}`;
             elAlertBox.className = `rounded-[3rem] py-10 px-24 shadow-2xl mb-12 bg-white border-8 transition-all duration-700 w-full max-w-6xl ${boxColorClass}`;
             elAlertMsg.className = `text-4xl font-bold ${msgColorClass}`;
-            
-            // 背景が濃い色の場合、ヘッダーとフッターの文字を白にする
             elHeaderText.className = `p-6 flex justify-between items-center bg-black/20 backdrop-blur-sm ${textColorClass}`;
             elFooterText.className = `p-4 text-center bg-black/20 backdrop-blur-sm ${textColorClass}`;
         }
@@ -207,45 +202,32 @@
          */
         async function fetchWeatherData() {
             try {
-                // Open-MeteoのURL構築（現在地の気温と湿度を取得）
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${LATITUDE}&longitude=${LONGITUDE}&current=temperature_2m,relative_humidity_2m&timezone=Asia%2FTokyo`;
-                
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Network response was not ok');
-                
                 const data = await response.json();
                 const temp = data.current.temperature_2m;
                 const humid = data.current.relative_humidity_2m;
-                
-                // WBGTの計算
                 const wbgt = calculateWBGT(temp, humid);
                 
-                // 画面への数値セット
                 elTemp.textContent = temp.toFixed(1);
                 elHumid.textContent = humid;
                 elWbgt.textContent = wbgt.toFixed(1);
-
-                // アラートレベルのUI更新
                 updateAlertUI(wbgt);
-
             } catch (error) {
                 console.error("Failed to fetch weather data:", error);
-                elAlertText.textContent = "データ取得エラー";
-                elAlertMsg.textContent = "ネットワーク接続を確認してください";
-                elAlertBox.className = "rounded-[3rem] py-10 px-24 shadow-2xl mb-12 bg-white text-gray-500 border-8 border-gray-300 w-full max-w-6xl";
+                elAlertText.textContent = "取得エラー";
+                elAlertMsg.textContent = "再試行中...";
             }
         }
 
-        // 初期化処理
         function init() {
             updateClock();
-            setInterval(updateClock, 1000); // 1秒ごとに時計を更新
-            
+            setInterval(updateClock, 1000);
             fetchWeatherData();
-            setInterval(fetchWeatherData, FETCH_INTERVAL_MS); // 定期的に気象データを更新
+            setInterval(fetchWeatherData, FETCH_INTERVAL_MS);
         }
 
-        // 実行
         init();
     </script>
 </body>
