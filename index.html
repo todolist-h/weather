@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>熱中症警戒サイネージ - 大分上野丘高校（ゲージ機能付き）</title>
+    <title>熱中症警戒サイネージ - 大分上野丘高校（シンプル＆高コントラスト）</title>
     <!-- Tailwind CSSの読み込み -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 視認性の高いGoogle Fonts (Noto Sans JP) の読み込み -->
@@ -24,25 +24,35 @@
 </head>
 <body class="h-screen w-screen flex flex-col transition-colors duration-1000 bg-gray-200" id="main-bg">
     
-    <!-- ヘッダー：タイトルと現在時刻 -->
-    <header class="p-6 flex justify-between items-center bg-black/10 backdrop-blur-sm text-gray-800" id="header-text">
-        <div class="flex items-center gap-4">
+    <!-- 常に超高コントラストを維持するダークヘッダー（ネイビー固定で熱中症予防情報を最優先で引き立てます） -->
+    <header class="p-6 flex justify-between items-center bg-slate-950 border-b-2 border-slate-800 text-white shadow-xl z-20">
+        <div class="flex items-center gap-6">
             <!-- 太陽のアイコン -->
             <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
             <div>
-                <h1 class="text-4xl font-black tracking-widest">熱中症予防情報</h1>
-                <p class="text-xl font-bold opacity-75">大分県立大分上野丘高等学校 周辺</p>
+                <!-- 「熱中症予防情報」：最高輝度の白で最大級に目立つフォント -->
+                <h1 class="text-5xl font-black tracking-widest text-white">
+                    熱中症予防情報
+                </h1>
+                <!-- 場所表示：すっきりと洗練された枠線のデザイン -->
+                <div class="flex items-center gap-3 mt-2">
+                    <span class="border border-slate-700 bg-slate-900 text-slate-300 font-bold text-sm px-3 py-1 rounded-md tracking-wider">大分市上野丘</span>
+                    <p class="text-xl font-bold text-slate-300 tracking-wide">
+                        大分県立大分上野丘高等学校 周辺
+                    </p>
+                </div>
             </div>
         </div>
         <!-- 警戒アラート発表バッジ（WBGT31以上で自動点滅表示） -->
         <div id="alert-badge" class="hidden bg-red-600 text-white text-2xl font-black px-6 py-3 rounded-full animate-pulse border-4 border-white shadow-lg">
             ⚠️ 熱中症警戒アラート発表基準到達
         </div>
+        <!-- 右側：日付と時間（白・ライトグレーで統一感のある表示） -->
         <div class="text-right">
-            <div id="date-display" class="text-3xl font-bold tracking-wider">----年--月--日(-)</div>
-            <div id="time-display" class="text-7xl font-black font-mono tracking-tighter mt-1">--:--</div>
+            <div id="date-display" class="text-3xl font-black tracking-wider text-white">----年--月--日(-)</div>
+            <div id="time-display" class="text-7xl font-black font-mono tracking-tighter mt-1 text-slate-100">--:--</div>
         </div>
     </header>
 
@@ -156,10 +166,10 @@
         </div>
     </main>
 
-    <!-- フッター：注意書きの内容を完全にアップデート -->
-    <footer class="p-4 text-center bg-black/10 backdrop-blur-sm text-gray-800" id="footer-text">
+    <!-- 常に読みやすいダークフッター：簡潔にした注意書き -->
+    <footer class="p-4 text-center bg-slate-950 border-t-2 border-slate-800 text-slate-300 shadow-2xl z-20">
         <p class="text-xl font-bold tracking-wide leading-relaxed">
-            ※本情報は実測値ではなく、気象予報情報から計算した推定値です。あくまで参考程度にとどめ、実際に体育や部活動などの活動を行う際には、必ずその場その場でWBGT測定器を用いて実測してください。
+            ※本情報は気象データによる推定値（参考用）です。体育や部活動等の活動時には、必ず現場でWBGT測定器を用いて実測してください。
         </p>
     </footer>
 
@@ -183,8 +193,6 @@
         const elHumid = document.getElementById('humid-value');
         const elSolar = document.getElementById('solar-value');
         const elWind = document.getElementById('wind-value');
-        const elHeaderText = document.getElementById('header-text');
-        const elFooterText = document.getElementById('footer-text');
         const elAlertBadge = document.getElementById('alert-badge');
 
         /**
@@ -244,7 +252,6 @@
             let bgColorClass = "";
             let boxColorClass = "";
             let msgColorClass = "";
-            let textColorClass = "text-gray-800";
 
             // アラートバッジの表示制御（31℃以上で警戒アラート発表状態）
             if (wbgt >= 31.0) {
@@ -259,7 +266,6 @@
                 bgColorClass = "bg-red-700";
                 boxColorClass = "border-red-500 text-red-600";
                 msgColorClass = "text-red-700 bg-red-50";
-                textColorClass = "text-white";
             } else if (wbgt >= 28.0) {
                 levelText = "厳重警戒";
                 msgText = "すべての運動でこまめな休憩・水分補給を";
@@ -284,7 +290,6 @@
                 bgColorClass = "bg-green-500";
                 boxColorClass = "border-green-400 text-green-600";
                 msgColorClass = "text-green-700 bg-green-50";
-                textColorClass = "text-white";
             }
 
             // テキスト・配色の流し込み
@@ -293,8 +298,6 @@
             elMainBg.className = `h-screen w-screen flex flex-col transition-colors duration-1000 ${bgColorClass}`;
             elAlertBox.className = `rounded-[3rem] py-8 px-12 shadow-2xl mb-8 bg-white border-8 transition-all duration-700 w-full max-w-6xl flex flex-col justify-between ${boxColorClass}`;
             elAlertMsg.className = `text-3xl font-black mt-4 px-6 py-2 rounded-full inline-block ${msgColorClass}`;
-            elHeaderText.className = `p-6 flex justify-between items-center bg-black/20 backdrop-blur-sm ${textColorClass}`;
-            elFooterText.className = `p-4 text-center bg-black/20 backdrop-blur-sm ${textColorClass}`;
 
             // ゲージの針位置をアップデート
             const percentage = calculatePinPercentage(wbgt);
